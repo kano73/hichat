@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<h1><!--/*@thymesVar id="publicName" type="java.lang.String"*/-->
+    <span th:text="${publicName}"></span> profile:</h1>
+<div th:utext="${btnPlace}"></div>
+<p>age:<!--/*@thymesVar id="age" type="java.lang.Integer"*/-->
+    <span th:text="${age}"></span></p>
+<p>description:<!--/*@thymesVar id="description" type="java.lang.String"*/-->
+    <span th:text="${description}"></span></p>
+<p>friends:</p>
+<!--/*@thymesVar id="friendsList" type="com.hichat.mychat.model.responce.FriendsList"*/-->
+<div th:each="friend : ${friendsList}" class="friendsList">
+    <a th:href="'/public_profile?id=' + ${friend.id}"><!--/*@thymesVar id="friend" type="com.hichat.mychat.model.responce.FriendsList"*/-->
+        <!--/*@thymesVar id="publicName" type="java.lang.String"*/-->
+        <span th:text="${friend.publicName}"></span></a>
+    <br><br>
+</div>
+<div th:utext="${footer}"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const queryParams = new URLSearchParams(window.location.search);
+        const id = queryParams.get('id');
+
+        const addToFriendsButton = document.querySelector('button.addToFriends');
+        const goToChatButton = document.querySelector('button.goToChat');
+        const removeFromFriendsButton = document.querySelector('button.removeFromFriends');
+        const acceptRequestToFriends = document.querySelector('button.acceptRequestToFriends');
+
+        if (addToFriendsButton) {
+            addToFriendsButton.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                fetch(window.location.pathname, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(id),
+
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Search request failed');
+                        }
+                    })
+                    .then(data => {
+                        alert(data);
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        }
+
+        if (goToChatButton) {
+            goToChatButton.addEventListener('click', function(event) {
+                window.location.href = '/chatwith?id=' + id;
+            });
+        }
+
+        if (removeFromFriendsButton) {
+            removeFromFriendsButton.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                fetch(window.location.pathname, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(id),
+
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Search request failed');
+                        }
+                    })
+                    .then(data => {
+                        alert(data);
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        }
+
+        if(acceptRequestToFriends){
+            acceptRequestToFriends.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                const idOfUser = id;
+                const responseStatus = "ACCEPT";
+
+                const requestData ={idOfUser,responseStatus}
+
+                fetch(`/requests_to_friendship`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData),
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('error accused while trying to add to friends');
+                        }
+                    })
+                    .then(data => {
+                        alert(data)
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        }
+    });
+
+</script>
+</body>
+</html>

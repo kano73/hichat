@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Request to friends</title>
+</head>
+<body>
+<h1>Requests for friendship with you:</h1>
+<!--/*@thymesVar id="friendRequests" type="com.hichat.mychat.model.entitie.FriendsRequest"*/-->
+    <div th:each="request : ${friendRequests}" class="friendRequests">
+        <!--/*@thymesVar id="inviter" type="com.hichat.mychat.model.entitie.MyUser"*/-->
+        <a th:href="'/public_profile?id='+${request.inviter.id}">username:<!--/*@thymesVar id="friend" type="com.hichat.mychat.model.responce.FriendsList"*/-->
+            <!--/*@thymesVar id="inviter" type="com.hichat.mychat.model.entitie.MyUser"*/-->
+            <!--/*@thymesVar id="publicName" type="java.lang.String"*/-->
+            <span th:text="${request.inviter.publicName}"></span></a>
+        <p>age:<!--/*@thymesVar id="friend" type="com.hichat.mychat.model.responce.FriendsList"*/-->
+            <!--/*@thymesVar id="publicName" type="java.lang.Integer"*/-->
+            <span th:text="${request.inviter.age}"></span></p>
+        <p>description:<!--/*@thymesVar id="friend" type="com.hichat.mychat.model.responce.FriendsList"*/-->
+            <!--/*@thymesVar id="publicName" type="java.lang.Integer"*/-->
+            <span th:text="${request.inviter.description}"></span></p>
+        <button class="response" th:data-user-id="${request.inviter.id}">accept</button>
+        <button class="response" th:data-user-id="${request.inviter.id}">reject</button>
+        <br><br>
+    </div>
+
+<div th:utext="${footer}"></div>
+<script>
+    const addToFriendsBtns = document.querySelectorAll('button.response'); // Выбрать все кнопки
+    addToFriendsBtns.forEach((button) => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            const idOfUser = button.dataset.userId;
+            const responseStatus = button.textContent.toUpperCase();
+
+            const requestData ={idOfUser,responseStatus};
+
+            fetch(`/requests_to_friendship`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('error accused while trying to add to friends');
+                    }
+                })
+                .then(data => {
+                    alert(data)
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
+</body>
+</html>

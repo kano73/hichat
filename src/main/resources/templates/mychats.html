@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<h1>Your chats:</h1>
+<div th:each="friend : ${friendsList}" class="friendsList">
+    <p>go to chat with:
+        <a th:href="'/chatwith?id=' + ${friend.id}">
+            <span th:text="${friend.publicName}"></span>
+        </a>
+    </p>
+    <br><br>
+</div>
+</body>
+<div th:utext="${footer}"></div>
+</html>
