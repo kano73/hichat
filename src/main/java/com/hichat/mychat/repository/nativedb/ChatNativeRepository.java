@@ -24,6 +24,7 @@ public class ChatNativeRepository {
 
         String query = "CREATE TABLE " + tableName + " (" +
                 "id SERIAL PRIMARY KEY, " +
+                "content_type TEXT NOT NULL, " +
                 "message TEXT NOT NULL, " +
                 "time_stamp TIMESTAMP NOT NULL, " +
                 "is_read BOOLEAN DEFAULT FALSE NOT NULL, " +
@@ -42,7 +43,7 @@ public class ChatNativeRepository {
         String tableName = tableChatNameStorage.setTableName(user1_id, user2_id);
         String query = "SELECT COUNT(*) " +
                 "FROM information_schema.tables " +
-                "WHERE table_schema = 'public' " + // replace with your schema name
+                "WHERE table_schema = 'public' " +
                 "AND table_name = '"+tableName+"'";
 
         Long count = (Long) entityManager.createNativeQuery(query).getSingleResult();
@@ -54,6 +55,17 @@ public class ChatNativeRepository {
         if(!isExistsByIds(id1, id2)){
             throw new ChatNotFound("chat with these users not exists");
         }
+    }
+
+    public boolean isExistsByName(String chatName) {
+        String query = "SELECT COUNT(*) " +
+                "FROM information_schema.tables " +
+                "WHERE table_schema = 'public' " +
+                "AND table_name = '"+chatName+"'";
+
+        Long count = (Long) entityManager.createNativeQuery(query).getSingleResult();
+
+        return count > 0;
     }
 }
 

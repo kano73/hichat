@@ -5,12 +5,21 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" th:href="@{/css/styles_base.css}">
     <title>Update profile</title>
 </head>
 <body>
-<a href="/main">Main</a>
 <h1>update your profile:</h1>
+<form id="uploadPhotoForm" enctype="multipart/form-data">
+    <label for="photo">Upload your profile image: </label>
+    <input type="file" id="photo" name="photo" accept="image/*,image/heif,image/heic" required>
+    <br><br>
+
+    <button type="submit">Upload</button>
+</form>
 <form id="updateForm">
+    
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" placeholder="You will need it to log in" th:value="${user.username}" required>
     <br>
@@ -36,68 +45,9 @@
     <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
     <br>
 
-    <button id="btnSubmit" type="submit">Register</button>
+    <button id="btnSubmit" type="submit">Update info</button>
 </form>
-
-<div th:utext="${footer}"></div>
-
-<script>
-    const origUsername = document.getElementById('username').value;
-    const origPublicName = document.getElementById('public_name').value;
-    const origAge = document.getElementById('age').value;
-    const origDescription = document.getElementById('description').value;
-    const origEmail = document.getElementById('email').value;
-
-    document.getElementById('updateForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const username = document.getElementById('username').value;
-        const publicName = document.getElementById('public_name').value;
-        const password = document.getElementById('confirmPassword').value;
-        const age = document.getElementById('age').value;
-        const description = document.getElementById('description').value;
-        const email = document.getElementById('email').value;
-
-        let requestData = {}
-
-        if (publicName !== origPublicName) requestData.publicName = publicName;
-        if (username !== origUsername) requestData.username = username;
-        if (email !== origEmail) requestData.email = email;
-        if (age !== origAge) requestData.age = age;
-        if (description !== origDescription) requestData.description = description;
-
-        const submitButton = document.getElementById('btnSubmit');
-        submitButton.disabled = true;
-
-        if (Object.keys(requestData).length === 0){
-            alert("no changed fields");
-            submitButton.disabled = false;
-            return;
-        }
-
-        requestData.password = password;
-
-        fetch('/update_profile', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
-        })
-            .then(response=>response.text())
-            .then(data => {
-                if (data === "ok") {
-                    window.location.href = '/logout';
-                }
-                alert(data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert("error:"+error);
-            });
-
-        submitButton.disabled = false;
-    });
-</script>
+<div th:replace="~{fragments/header :: div}"></div>
+<script th:replace="~{fragments/script_update_pfofile :: div}"></script >
 </body>
 </html>

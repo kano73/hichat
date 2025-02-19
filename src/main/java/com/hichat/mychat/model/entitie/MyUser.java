@@ -1,17 +1,12 @@
 package com.hichat.mychat.model.entitie;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name="my_user")
-@NoArgsConstructor
-@AllArgsConstructor
 public class MyUser {
 
     @Id
@@ -36,7 +31,6 @@ public class MyUser {
     @Column(name="description")
     private String description;
 
-    @Lob
     @Column(name="photo_url")
     private String usersPhotoUrl;
 
@@ -46,11 +40,22 @@ public class MyUser {
     @Column(name="last_visit")
     private LocalDateTime lastVisit;
 
-    public Boolean getOnline() {
+    @Column(name="is_email_verified")
+    private boolean isEmailVerified = false;
+
+    public boolean getEmailVerified() {
+        return isEmailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        isEmailVerified = emailVerified;
+    }
+
+    public Boolean getIsOnline() {
         return isOnline;
     }
 
-    public void setOnline(Boolean online) {
+    public void setIsOnline(Boolean online) {
         isOnline = online;
     }
 

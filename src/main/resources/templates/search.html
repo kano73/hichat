@@ -5,6 +5,8 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" th:href="@{/css/styles_base.css}">
     <title>Document</title>
 </head>
 <body>
@@ -24,90 +26,14 @@
 
         <button id="btnSubmit" type="submit">Search</button>
     </form>
-    <button id="nextPage">next page</button>
-    <p>current page: <span id="pageNumber"></span></p>
-    <button id="previousPage">previous page</button>
+<!--    <button id="nextPage">next page</button>-->
+<!--    <p>current page: <span id="pageNumber"></span></p>-->
+<!--    <button id="previousPage">previous page</button>-->
     <h2>Results:</h2>
     <div class='result'></div>
 
-    <footer>
-        <ul>
-            <li><a href="/main">Main</a></li>
-            <li><a href="/register">Register</a></li>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/profile">Profile</a></li>
-            <li><a href="/mychats">my chats</a></li>
-            <li><a href="/search">search</a></li>
-            <li><a href="/requests_to_friendship">requests to me</a></li>
-            <li><a href="/logout">Logout</a></li>
-        </ul>
-    </footer>
-<script>
-    function performSearch(pageNumber) {
-        const publicName = document.getElementById('publicName').value;
-        let ageBefore = document.getElementById('ageBefore').value || 0;
-        let ageAfter = document.getElementById('ageAfter').value || 150;
-
-        const requestData = {
-            publicName: publicName,
-            ageBefore: ageBefore,
-            ageAfter: ageAfter
-        };
-
-        console.log(requestData);
-
-        fetch(`/search?page=${pageNumber}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Search request failed');
-                }
-            })
-            .then(data => {
-                displayResultsAsHTML(data, pageNumber);
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    function displayResultsAsHTML(users, pageNumber) {
-        const resultsContainer = document.querySelector('div.result'); // The container for the results
-        resultsContainer.innerHTML = ''; // Clear previous results
-
-        users.forEach(user => {
-            const userDiv = document.createElement('div');
-            userDiv.classList.add('link');
-            userDiv.innerHTML = `
-                <a href='/public_profile?id=${user.id}'>
-                    <span>${user.publicName}</span>
-                </a>
-                <p>age:
-                    <span>${user.age}</span>
-                </p>
-                <p>description:
-                    <span>${user.description || 'N/A'}</span>
-                </p>
-                <br><br>
-            `;
-            resultsContainer.appendChild(userDiv);
-        });
-
-        // Update the current page number
-        document.getElementById('pageNumber').textContent = pageNumber;
-    }
-
-    document.getElementById('search').addEventListener('submit', function(event) {
-        event.preventDefault();
-        performSearch(0); // Начинаем с первой страницы
-    });
-
-</script>
+    <div th:replace="~{fragments/header :: div}"></div>
+    <script th:replace="~{fragments/script_search :: div}"></script >
 
 </body>
 </html>

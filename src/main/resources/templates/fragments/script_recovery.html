@@ -1,0 +1,36 @@
+<div>
+    <script>
+        document.getElementById('recoverPasswordForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('mail').value;
+
+            const requestData = {
+                email: email
+            };
+
+            const submitButton = document.getElementById('btnSubmit');
+            submitButton.disabled = true;
+
+            fetch(window.location.pathname, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            })
+                .then(response => response.text())
+                .then(data => {
+                    // Handle the response here, for example, show a success message
+                    console.log('Success:', data);
+                    alert(data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert("error:"+error);
+                });
+
+            submitButton.disabled = false;
+        });
+    </script>
+</div>

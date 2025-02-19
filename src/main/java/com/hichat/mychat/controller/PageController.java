@@ -42,13 +42,33 @@ public class PageController {
     }
 
     @GetMapping("/register")
-    public String register() {
+    public String register(Model model) {
         return "register";
     }
 
     @GetMapping("/notfound")
     public String notfound() {
         return "notfound";
+    }
+
+    @GetMapping("/public_profile")
+    public String publicProfile(@RequestParam int id, Model model) throws UserNotFoundException, UserOpenedHisPublicProfile {
+        model = pageBuilderService.buildPublicProfile(id,model);
+
+        return "public_profile";
+    }
+
+    @GetMapping("/profile")
+    public String profile(Model model) throws UserNotFoundException {
+        model = pageBuilderService.buildProfilePage(model);
+
+        return "profile";
+    }
+
+    @GetMapping("/update_profile")
+    public String updateProfile(Model model) throws UserNotFoundException {
+        model = pageBuilderService.buildUpdateProfilePage(model);
+        return "update_profile";
     }
 
     @GetMapping("/search")
@@ -68,6 +88,33 @@ public class PageController {
     @GetMapping("/requests_to_friendship")
     public String requestsToMe(Model model) throws UserNotFoundException {
         model = pageBuilderService.buildRequestsForFriendShip(model);
-        return "requestsToFriendship";
+        return "requests_to_friendship";
+    }
+
+    @GetMapping("/chatwith")
+    public String chatwith(Model model, @RequestParam int id) throws UserNotFoundException {
+        model = pageBuilderService.buildChatWithPage(model,id);
+
+        return "chat_with";
+    }
+
+    @GetMapping("/recovery")
+    public String recoveryPassword(Model model){
+        return "recovery";
+    }
+
+    @GetMapping("/reset_password/{pathCode}")
+    public String resetPassword(Model model){
+        return "reset_password";
+    }
+
+    @GetMapping("/confirm_mail/{pathCode}")
+    public String confirmMail(Model model){
+        return "confirm_mail";
+    }
+
+    @GetMapping("/near_by")
+    public String nearBy(){
+        return "near_by";
     }
 }

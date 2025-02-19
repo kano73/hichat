@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap');
+
+.zain-extralight {
+    font-family: "Zain", serif;
+    font-weight: 200;
+    font-style: normal;
+}
+
+body{
+    padding-top: 2.5rem;
+    background-color: #446076;
+    color: #DEDECB;
+}
+
+*{
+    font-family: "Zain", serif;
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: 400;
+}
+
+h1 *{
+    font-size: 3rem;
+    font-weight: 400;
+}
+
+/*links*/
+
+ul {
+    display: inline-grid;
+    grid-auto-flow: row;
+    grid-gap: 24px;
+    justify-items: center;
+    margin: auto;
+}
+
+@media (min-width: 500px) {
+    ul {
+        grid-auto-flow: column;
+    }
+}
+
+li a {
+    color: white;
+    font-size: 0.8rem;
+    margin: 0.5rem 0.5rem;
+    text-decoration: none;
+    box-shadow: inset 0 -1px 0 hsla(0, 0%, 100%, 0.4);
+}
+
+li a:hover {
+    box-shadow: inset 0 -1.2em 0 hsla(0, 0%, 100%, 0.4);
+}
+
+li:last-child {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+li:hover ~ li p {
+    animation: wave-animation 0.3s infinite;
+}
+
+div.links {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+
+    margin: 0 !important;
+
+    height: 2.5rem;
+    width: 100%;
+    background-color: #001232;
+    line-height: 1.3;
+    font-family: Menlo, monospace;
+}
+
+input{
+    background-color: #506081;
+    color: #0C0E27;
+
+    border-radius: 0.8rem;
+
+    padding-left: 0.3rem;
+}
+
+textarea{
+    background-color: #506081;
+    color: #0C0E27;
+
+    border-radius: 0.8rem;
+
+    padding-left: 0.3rem;
+}
+
+
+button{
+    background-color: #7FCECE;
+    color: #001232;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 0.8rem;
+
+    margin: 0.3rem ;
+    padding: 0.3rem;
+}
+
+.btn{
+    background-color: #7FCECE;
+    color: #001232;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 0.8rem;
+
+    margin: 0.3rem ;
+    padding: 0.3rem;
+}
+
+img{
+    max-width: 35vw;
+    border-radius: 0.8rem;
+}
+img.profile{
+    max-width: 40vw;
+}
+
+/*chat*/
+.actual-message{
+    background-color: #3C7A8A;
+    color: white;
+    border-radius: 0.8rem;
+    max-width: 35vw; /* Ограничиваем максимальную ширину */
+    width: auto; /* Автоматическая ширина на основе содержимого */
+    word-wrap: break-word; /* Перенос слов, если они длиннее блока */
+    white-space: pre-wrap; /* Сохраняет пробелы и переносы строк */
+
+    height: auto;
+    padding: 0.3rem !important;
+    margin: 0 !important;
+
+    display: flex;
+    justify-content: flex-start;
+
+    text-align: left ;
+}
+
+.right{
+    padding-left: 60%;
+}
+
+.messages_web_socket{
+    padding-bottom: 4rem;
+}
+
+/*btns*/
+
+/* Скрываем стандартный input[type="file"] */
+
+
+/* Стиль для label, который теперь выглядит как кнопка */
+label[for="photo"] {
+    background-color: #3C7A8A;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+}
+
+/* Стили для кнопки при наведении */
+label[for="photo"]:hover {
+    background-color: #2a5a65;
+}
+
+div.input-forms {
+    position: fixed ;
+    bottom: 0;
+    left: 0;
+    display: flex;
+
+    margin: 0 !important;
+    padding: 0.2rem !important;
+
+    width: 100%;
+    background-color: #001232;
+}
+
+.input-forms {
+    display: flex; /* Включаем Flexbox для расположения в ряд */
+    justify-content: space-between; /* Размещаем формы по ширине */
+    width: 100%; /* Растягиваем контейнер на всю ширину экрана */
+    gap: 20px; /* Отступы между формами */
+}
+
+.input-forms form {
+    display: flex; /* Используем Flexbox внутри формы для выравнивания элементов */
+    align-items: center; /* Выравнивание элементов по центру по вертикали */
+    width: 60vw;
+}
+
+.input-forms input[type="text"], .input-forms input[type="file"] {
+    width: 100%; /* Растягиваем инпуты по ширине формы */
+    border: 1px solid #ccc; /* Рамка для инпута */
+    border-radius: 5px; /* Скругленные углы */
+}
+
+.input-forms form button {
+    background-color: #3C7A8A; /* Цвет кнопки */
+    color: white; /* Цвет текста */
+    border: none; /* Без границы */
+    white-space: nowrap;
+    border-radius: 5px; /* Скругленные углы */
+    cursor: pointer; /* Курсор в виде руки */
+    transition: background-color 0.3s ease; /* Плавное изменение цвета при наведении */
+}
+
+.input-forms button:hover {
+    background-color: #2a5a65; /* Изменение цвета кнопки при наведении */
+}
+
+img.icon {
+    width: 20px; /* Размер иконки */
+    height: auto; /* Пропорции изображения */
+}

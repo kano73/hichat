@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" th:href="@{/css/styles_base.css}">
     <title>User Registration</title>
 </head>
 <body>
+<div th:replace="~{fragments/header :: div}"></div>
 <div class="registration-container">
     <h1>Register</h1>
+    <p>Already have an account? <a href="/login">Login here</a></p>
+    <br>
     <form id="registerForm">
+        <p>Later in your profile you will be abel to upload personal photo</p>
+        <br>
+
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" placeholder="You will need it to log in" required>
         <br>
@@ -37,58 +45,10 @@
         <textarea id="description" name="description" >
         </textarea>
         <br>
+        <p>By registering, you confirm that you are 18 years of age.</p>
         <button id="btnSubmit" type="submit">Register</button>
     </form>
-    <p>Already have an account? <a href="/login">Login here</a></p>
 </div>
-<script>
-    document.getElementById('registerForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const username = document.getElementById('username').value;
-        const publicName = document.getElementById('public_name').value;
-        const password = document.getElementById('password').value;
-        const age = document.getElementById('age').value;
-        const description = document.getElementById('description').value;
-        const email = document.getElementById('email').value;const confirmPassword = document.getElementById('confirmPassword').value;
-
-        if(confirmPassword!==password){
-            alert("Passwords do not match!");
-            return;
-        }
-
-        const requestData = {
-            username:username,
-            publicName:publicName,
-            password:password,
-            age:age,
-            description:description,
-            email:email
-        };
-
-        const submitButton = document.getElementById('btnSubmit');
-        submitButton.disabled = true;
-
-        fetch('/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
-        })
-            .then(response => response.text())
-            .then(data => {
-                // Handle the response here, for example, show a success message
-                console.log('Success:', data);
-                alert(data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert("error:"+error);
-            });
-
-        submitButton.disabled = false;
-    });
-</script>
+<script th:replace="~{fragments/script_register :: script}"></script >
 </body>
 </html>

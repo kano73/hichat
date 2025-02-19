@@ -1,4 +1,4 @@
-package com.hichat.mychat.model.responce;
+package com.hichat.mychat.model.response;
 
 import lombok.NoArgsConstructor;
 

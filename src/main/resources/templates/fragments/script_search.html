@@ -1,0 +1,66 @@
+<div>
+    <script>
+        function performSearch(pageNumber) {
+            const publicName = document.getElementById('publicName').value;
+            let ageBefore = document.getElementById('ageBefore').value || 0;
+            let ageAfter = document.getElementById('ageAfter').value || 150;
+
+            const requestData = {
+                publicName: publicName,
+                ageBefore: ageBefore,
+                ageAfter: ageAfter
+            };
+
+            fetch(`/search?page=${pageNumber}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Search request failed');
+                    }
+                })
+                .then(data => {
+                    displayResultsAsHTML(data, pageNumber);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function displayResultsAsHTML(users, pageNumber) {
+            const resultsContainer = document.querySelector('div.result'); // The container for the results
+            resultsContainer.innerHTML = ''; // Clear previous results
+
+            users.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.classList.add('link');
+                userDiv.innerHTML = `
+                <a href='/public_profile?id=${user.id}'>
+                    <span>${user.publicName}</span>
+                </a>
+                <p>age:
+                    <span>${user.age}</span>
+                </p>
+                <p>description:
+                    <span>${user.description || 'N/A'}</span>
+                </p>
+                <br><br>
+            `;
+                resultsContainer.appendChild(userDiv);
+            });
+
+            // document.getElementById('pageNumber').textContent = pageNumber;
+        }
+
+        document.getElementById('search').addEventListener('submit', function(event) {
+            event.preventDefault();
+            performSearch(0); // Начинаем с первой страницы
+        });
+
+    </script>
+    <script th:replace="~{fragments/script_websocket_connection :: div}"></script >
+</div>

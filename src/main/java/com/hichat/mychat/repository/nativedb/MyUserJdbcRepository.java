@@ -1,6 +1,7 @@
 package com.hichat.mychat.repository.nativedb;
 
 import com.hichat.mychat.model.entitie.MyUser;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +18,17 @@ public class MyUserJdbcRepository {
 
 //   update
 
-    public boolean updateUserInfoById(MyUser user){
+    public boolean updatePasswordById(@NotNull String newPassword, int id) {
+        String sql = "update my_user set password = ? where id = ?";
+        return jdbcTemplate.update(sql, new Object[]{newPassword,id}) > 0;
+    }
+
+    public boolean setEmailVerifiedTrue(MyUser user) {
+        String sql = "update my_user set is_email_verified = true where id = ?";
+        return jdbcTemplate.update(sql, new Object[]{user.getId()}) > 0;
+    }
+
+    public boolean updateUserInfoById(@NotNull MyUser user){
         String sql = sqlUpdateBuilder(user);
 
         return jdbcTemplate.update(sql, toParams(user)) > 0;

@@ -1,0 +1,35 @@
+<div>
+    <script>
+        const addToFriendsBtns = document.querySelectorAll('button.response'); // Выбрать все кнопки
+        addToFriendsBtns.forEach((button) => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                const idOfUser = button.dataset.userId;
+                const responseStatus = button.textContent.toUpperCase();
+
+                const requestData ={idOfUser,responseStatus};
+
+                fetch(`/requests_to_friendship`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData),
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('error accused while trying to add to friends');
+                        }
+                    })
+                    .then(data => {
+                        alert(data)
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+    <script th:replace="~{fragments/script_websocket_connection :: div}"></script >
+</div>

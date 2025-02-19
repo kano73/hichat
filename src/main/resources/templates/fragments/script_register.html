@@ -1,0 +1,58 @@
+<div>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const publicName = document.getElementById('public_name').value;
+            const password = document.getElementById('password').value;
+            const age = document.getElementById('age').value;
+            const description = document.getElementById('description').value;
+            const email = document.getElementById('email').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if(age<18){
+                alert("Hey, just so you know, this service is only for people who are 18 or over.");
+                return;
+            }
+
+            if(confirmPassword!==password){
+                alert("Passwords do not match!");
+                return;
+            }
+
+            const requestData = {
+                username:username,
+                publicName:publicName,
+                password:password,
+                age:age,
+                description:description,
+                email:email
+            };
+
+            const submitButton = document.getElementById('btnSubmit');
+            submitButton.disabled = true;
+
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            })
+                .then(response => response.text())
+                .then(data => {
+                    // Handle the response here, for example, show a success message
+                    console.log('Success:', data);
+                    alert(data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert("error:"+error);
+                });
+
+            submitButton.disabled = false;
+        });
+    </script>
+
+</div>

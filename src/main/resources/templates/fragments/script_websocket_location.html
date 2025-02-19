@@ -1,0 +1,176 @@
+<div>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPHrbc5_SK-zV5j-lut2OZevVX4UGaFxU&libraries=marker"></script>
+    <script async defer th:inline="javascript">
+        let map;
+        let current_location;
+
+        async function initMap() {
+            if (typeof google === 'undefined') {
+                console.error("Google Maps API не загружен.");
+                return;
+            }
+            // const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+            navigator.geolocation.getCurrentPosition((position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                current_location = { lat: latitude, lng: longitude };
+
+                // Создание карты
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: current_location,
+                    zoom: 12,
+                    mapId: '7d70729f76ec1fda'
+                });
+
+                websocket();
+            }, (error) => {
+                console.error("Ошибка при получении геолокации:", error);
+                alert("Не удалось получить ваше местоположение.");
+            });
+        }
+
+        window.onload = initMap;
+
+        function websocket() {
+            console.log('script_websocket_connection');
+            const stompClient = new StompJs.Client({
+                brokerURL: 'ws://localhost:8080/location',
+                connectHeaders: {
+                    'endpoint': '/location'
+                },
+                onConnect: (frame) => {
+                    console.log('Connected to STOMP: ' + frame);
+
+                    stompClient.subscribe('/sp_send/locations' , (data) => {
+                        if (data.body === '') {
+                            return;
+                        }
+                        showResponse(JSON.parse(data.body));
+                    });
+
+                    const postData ={
+                        operation: 'ADD',
+                        lat: current_location.lat,
+                        lng: current_location.lng,
+                    }
+
+                    fetch('/near_by', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(postData)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            showResponse(data);
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                            alert("error:"+error);
+                        });
+
+                    // stompClient.publish({
+                    //     destination: "/sp_get/locations",
+                    //     body: JSON.stringify(requestData)
+                    // });
+                },
+                onStompError: (error) => {
+                    console.error('STOMP Error:', error);
+                },
+                onWebSocketError: (error) => {
+                    console.error('Error with websocket', error);
+                }
+            });
+
+            stompClient.activate();
+
+            function showResponse(data) {
+
+                if (data && Array.isArray(data)) {
+                    ifResponseIsArray(data);
+                } else if (data && typeof data === 'object') {
+                    ifResponseIsObject(data);
+                }
+                else {
+                    console.error('Неверный формат данных от сервера');
+                }
+            }
+
+            function ifResponseIsArray(data){
+                data.forEach(userAndPos => {
+                    ifResponseIsObject(userAndPos);
+                });
+            }
+
+            function ifResponseIsObject(userAndPos){
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! position is dinamicaly changing(for testing)!!!!!!!!!!!!!!!
+                const x = random(-0.5, 0.5);
+                const y = random(-0.5, 0.5);
+                userAndPos.lat = userAndPos.lat + x;
+                userAndPos.lng = userAndPos.lng + y;
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                const userPosition = {lat: userAndPos.lat, lng: userAndPos.lng};
+
+                const publicName = document.createElement("p");
+                publicName.className = "public-name";
+                publicName.textContent = userAndPos.user.publicName;
+
+                publicName.style.fontSize = '1.2rem';
+                publicName.style.fontWeight = 'bold';
+                publicName.style.color = '#ffffff';
+
+                const userPhoto = document.createElement("img");
+                userPhoto.src = userAndPos.user.usersPhotoUrl ? userAndPos.user.usersPhotoUrl : 'https://www.w3schools.com/howto/img_avatar.png';
+
+                userPhoto.style.width = '4rem';
+
+                let showData = document.getElementById("user-id-" + userAndPos.user.id);
+
+                if(!showData){
+                    showData = document.createElement("div");
+                    showData.className = "show-data";
+                    showData.id = "user-id-"+ userAndPos.user.id;
+
+                    showData.appendChild(userPhoto);
+                    showData.appendChild(publicName);
+                }else{
+                    if(userAndPos.operation === 'DELETE'){
+                        showData.remove();
+
+                        return;
+                    }else{
+                        showData.innerHTML = "";
+                        showData.appendChild(userPhoto);
+                        showData.appendChild(publicName);
+                    }
+                }
+
+                showData.style.padding = '0';
+                showData.style.margin = '0';
+                showData.style.backgroundColor = '#000000';
+
+                const marker = new google.maps.marker.AdvancedMarkerElement({
+                    map,
+                    position: userPosition,
+                    content: showData,
+                    title: userAndPos.user.publicName,
+
+                    gmpClickable: true,
+                });
+
+                marker.addListener("click", () => {
+                    window.location.href = '/public_profile?id=' + userAndPos.user.id;
+                });
+            }
+        }
+        // neeeed only for testing delete after!!!!!!!!!!!!!!!!!!!!!!!!!!
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+    </script>
+</div>

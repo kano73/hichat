@@ -1,21 +1,41 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
 <head>
-    <title>Spring Security Example </title>
+
+    <link rel="stylesheet" th:href="@{/css/styles_base.css}">
+    <link rel="stylesheet" th:href="@{/css/styles_login.css}">
+    <title>hi chat login</title>
 </head>
     <body>
-        <div th:if="${param.error}">
-            Invalid username and password.
-        </div>
-        <div th:if="${param.logout}">
-            You have been logged out.
-        </div>
-            <form th:action="@{/login}" method="post">
-                <div><label> User Name : <input type="text" name="username"/> </label></div>
-                <div><label> Password: <input type="password" name="password"/> </label></div>
-                <div><input type="submit" value="Sign In"/></div>
-            </form>
-    </body>
-<div th:utext="${footer}"></div>
+        <div th:replace="~{fragments/header :: div}"></div>
 
+        <div class="container">
+            <div class="login-div">
+                <div class="item">
+                    <p>Dont have an account? <a href="/register">register</a></p>
+                </div>
+                <div class="line"></div>
+                <div class="item">
+                    <form th:action="@{/login}" method="post">
+                        <div class="form">
+                            <div><label> User Name : <input type="text" name="username"/> </label></div>
+                            <div><label> Password: <input type="password" name="password"/> </label></div>
+                            <div><input class="btn" type="submit" value="Sign In"/></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="line"></div>
+                <div class="google item">
+                    <a href="/oauth2/authorization/google">
+                        <button type="button">Sign in with Google</button>
+                    </a>
+                </div>
+                <div class="line"></div>
+                <div class="recover item">
+                    <a href="/recovery"><button>forgot password</button></a>
+                </div>
+            </div>
+        </div>
+
+    </body>
 </html>

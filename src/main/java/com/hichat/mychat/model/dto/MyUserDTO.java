@@ -24,7 +24,7 @@ public class MyUserDTO {
     @Size(min = 3, max = 200)
     private String email;
 
-    @Min(16)
+    @Min(18)
     @Max(150)
     private Integer age;
 

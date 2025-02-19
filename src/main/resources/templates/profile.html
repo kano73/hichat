@@ -5,30 +5,40 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" th:href="@{/css/styles_base.css}">
     <title>Profile</title>
 </head>
 <body>
 <h1>my profile:</h1>
 <p>your info:</p>
 <p>change your profile <a href="/update_profile">here</a></p>
-<p>username: <!--/*@thymesVar id="username" type="java.lang.String"*/-->
-<span th:text="${username}"></span></p>
-<p>public name: <!--/*@thymesVar id="publicName" type="java.lang.String"*/-->
-<span th:text="${publicName}"></span></p>
-<p>email: <!--/*@thymesVar id="email" type="java.lang.String"*/-->
-<span th:text="${email}"></span></p>
-<p>age:<!--/*@thymesVar id="age" type="java.lang.Integer"*/-->
-<span th:text="${age}"></span></p>
-<p>description:<!--/*@thymesVar id="description" type="java.lang.String"*/-->
-<span th:text="${description}"></span></p>
+<div th:if="${user.usersPhotoUrl != null}">
+    <img class="profile" th:src="${user.usersPhotoUrl}" alt="photo">
+</div>
+<div th:if="${user.isOnline}">
+    <p>online</p>
+</div>
+<div th:if="${!user.isOnline}">
+    <p>offline</p>
+</div>
+<p>username:
+<span th:text="${user.username}"></span></p>
+<p>public name:
+<span th:text="${user.publicName}"></span></p>
+<p>email:
+<span th:text="${user.email}"></span></p>
+<p>age:
+<span th:text="${user.age}"></span></p>
+<p>description:
+<span th:text="${user.description}"></span></p>
 <p>friends:</p>
-    <!--/*@thymesVar id="friendsList" type="com.hichat.mychat.model.responce.FriendsList"*/-->
     <div th:each="friend : ${friendsList}" class="friendsList">
         <a th:href="'/public_profile?id=' + ${friend.id}"><span th:text="${friend.publicName}"></span></a><br>
         <a th:href="'/chatwith?id=' + ${friend.id}">go to chat</a>
         <br><br>
     </div>
 </body>
-<div th:utext="${footer}"></div>
-
+<div th:replace="~{fragments/header :: div}"></div>
+<script th:replace="~{fragments/script_websocket_connection :: div}"></script >
 </html>

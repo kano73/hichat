@@ -1,7 +1,6 @@
 package com.hichat.mychat.config;
 
 import com.hichat.mychat.config.storage.TableChatNameStorage;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
 import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;

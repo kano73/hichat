@@ -1,0 +1,153 @@
+<div>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script th:inline="javascript">
+        const idOfOwner = /*[[${id}]]*/ 0;
+
+        // style settings
+        const allMessages = document.getElementsByClassName("message");
+
+        Array.from(allMessages).forEach(message => {
+            console.log(message);
+            const messageId = message.getAttribute("data-id"); // Получаем значение data-id
+            console.log(messageId);
+            if (idOfOwner.toString() === messageId) {
+                console.log('oppa')
+                message.classList.add('right');
+            }
+        });
+
+        const queryParams = new URLSearchParams(window.location.search);
+        const idOfReceiver = parseInt(queryParams.get('id'), 10); // Приведение к числу
+
+        const chatName = Math.max(idOfReceiver, idOfOwner) === idOfOwner
+            ? `chat_${idOfReceiver}_${idOfOwner}`
+            : `chat_${idOfOwner}_${idOfReceiver}`;
+
+        window.onload = function() {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            })
+        }
+
+        document.getElementById('sendImageForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('photo');
+            const file = fileInput.files[0];
+
+            if (file && !file.type.startsWith('image/')) {
+                alert('Please upload an image file.');
+                return;
+            }
+
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxSize) {
+                alert('File size must not exceed 5MB.');
+                return;
+            }
+
+            // Создание FormData для отправки файла
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fileInput.value = '';
+
+            fetch('/hichat-users-private-photos/send-photo/'+ idOfReceiver, {
+                method: 'POST',
+                body: formData,
+            })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred during the upload.');
+                });
+        });
+        document.getElementById('sendMessageForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const message = document.getElementById('messageText').value;
+            const contentType= 'TEXT';
+
+            const messageData = {
+                idOfReceiver,
+                contentType,
+                message
+            };
+
+            const submitButton = document.getElementById('btnSubmit');
+            submitButton.disabled = true;
+
+            fetch(window.location.pathname, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(messageData),
+            })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert("error:"+error);
+                });
+
+            document.getElementById('messageText').value = "";
+            submitButton.disabled = false;
+        });
+
+        const stompClient = new StompJs.Client({
+            brokerURL: 'ws://localhost:8080/chat'
+        });
+
+        stompClient.onConnect = (frame) => {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/sp_send/'+chatName, (message) => {
+                if(JSON.parse(message.body) === ''){
+                    return;
+                }
+                showResponse(JSON.parse(message.body));
+            });
+        };
+        stompClient.onWebSocketError = (error) => {
+            console.error('Error with websocket', error);
+        };
+        stompClient.onStompError = (frame) => {
+            console.error('Broker reported error: ' + frame.headers['message']);
+            console.error('Additional details: ' + frame.body);
+        };
+
+        stompClient.activate();
+
+        function showResponse(message) {
+            const referenceElement = document.querySelector('div.messages_web_socket');
+
+            // Создаём новый элемент
+            const newObject = document.createElement('div');
+
+            // Вставляем новый элемент после ссылочного
+            referenceElement.appendChild(newObject);
+
+            newObject.classList.add('message');
+            if (message.contentType.toString() === 'TEXT') {
+                newObject.innerHTML = `
+            <div class="actual-message" data-id="${message.sender.id}">
+                <span>${message.messageText}</span>
+            </div>
+            <br>
+        `;
+            } else if (message.contentType.toString() === 'IMAGE') {
+                newObject.innerHTML = `
+            <div class="actual-message" data-id="${message.sender.id}">
+                <img class="photo" src='/hichat-users-private-photos/download/${message.messageText}' alt="photo">
+            </div>
+            <br>
+        `;
+            }
+            if(message.sender.id === idOfOwner){
+                newObject.classList.add('right')
+            }
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            })
+        }
+    </script>
+</div>

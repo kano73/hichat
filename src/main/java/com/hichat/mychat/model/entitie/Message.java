@@ -1,11 +1,7 @@
 package com.hichat.mychat.model.entitie;
 
+import com.hichat.mychat.model.enumclass.DataType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +10,10 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="content_type")
+    private DataType contentType;
 
     @Column(name="message", nullable = false)
     private String message;
@@ -39,6 +39,14 @@ public class Message {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public DataType getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(DataType contentType) {
+        this.contentType = contentType;
     }
 
     public String getMessage() {

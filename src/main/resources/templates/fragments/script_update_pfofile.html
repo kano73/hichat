@@ -1,0 +1,99 @@
+<div>
+    <script>
+        const origUsername = document.getElementById('username').value;
+        const origPublicName = document.getElementById('public_name').value;
+        const origAge = document.getElementById('age').value;
+        const origDescription = document.getElementById('description').value;
+        const origEmail = document.getElementById('email').value;
+
+        document.getElementById('updateForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const publicName = document.getElementById('public_name').value;
+            const password = document.getElementById('confirmPassword').value;
+            const age = document.getElementById('age').value;
+            const description = document.getElementById('description').value;
+            const email = document.getElementById('email').value;
+
+            let requestData = {}
+
+            if (publicName !== origPublicName) requestData.publicName = publicName;
+            if (username !== origUsername) requestData.username = username;
+            if (email !== origEmail) requestData.email = email;
+            if (age !== origAge) requestData.age = age;
+            if (description !== origDescription) requestData.description = description;
+
+            const submitButton = document.getElementById('btnSubmit');
+            submitButton.disabled = true;
+
+            if (Object.keys(requestData).length === 0){
+                alert("no changed fields");
+                submitButton.disabled = false;
+                return;
+            }
+
+            requestData.password = password;
+
+            fetch('/update_profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            })
+                .then(response=>response.text())
+                .then(data => {
+                    if (data === "ok") {
+                        window.location.href = '/logout';
+                    }
+                    alert(data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert("error:"+error);
+                });
+
+            submitButton.disabled = false;
+        });
+
+        document.getElementById('uploadPhotoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('photo');
+            const file = fileInput.files[0];
+
+            if (file && !file.type.startsWith('image/')) {
+                alert('Please upload an image file.');
+                return;
+            }
+
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxSize) {
+                alert('File size must not exceed 5MB.');
+                return;
+            }
+
+            // Создание FormData для отправки файла
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/hichat-users-photos/upload-profile-photo', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Photo uploaded successfully!');
+                    } else {
+                        alert('Failed to upload photo.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred during the upload.');
+                });
+        });
+    </script>
+    <script th:replace="~{fragments/script_websocket_connection :: div}"></script >
+</div>

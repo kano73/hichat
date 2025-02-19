@@ -1,0 +1,17 @@
+<div>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script>
+        console.log('script_websocket_connection');
+        const socketForConnection = new StompJs.Client({
+            brokerURL: 'ws://localhost:8080/connection',
+            onConnect: () => {
+                console.log('Connected to STOMP');
+            },
+            onStompError: (error) => {
+                console.error('STOMP Error:', error);
+            }
+        });
+
+        socketForConnection.activate();
+    </script>
+</div>

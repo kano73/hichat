@@ -46,15 +46,8 @@ public class PageBuilderService {
 
         List<MyUser> friendsList = getFriendsOfUser(authUser);
 
-        model.addAttribute("publicName", authUser.getPublicName());
-        model.addAttribute("username",authUser.getUsername());
-        model.addAttribute("email", authUser.getEmail());
-        model.addAttribute("age", authUser.getAge());
-        model.addAttribute("description", authUser.getDescription());
+        model.addAttribute("user", authUser);
         model.addAttribute("friendsList", friendsList);
-
-        model.addAttribute("footer", getFooter());
-
         return model;
     }
 
@@ -64,8 +57,6 @@ public class PageBuilderService {
         List<MyUser> friends = getFriendsOfUser(authUser);
 
         model.addAttribute("friendsList", friends);
-
-        model.addAttribute("footer", getFooter());
 
         return model;
     }
@@ -81,13 +72,12 @@ public class PageBuilderService {
 
         List<Message> messages = usersMessageJdbcRepository.findAll();
 
-        tableChatNameStorage.clear();
-
-        model.addAttribute("publicName",userChatWith.getPublicName());
+        model.addAttribute("user",userChatWith);
         model.addAttribute("messages", messages);
 
-        model.addAttribute("footer", getFooter());
+        model.addAttribute("id",authUser.getId());
 
+        tableChatNameStorage.clear();
         return model;
     }
 
@@ -105,9 +95,7 @@ public class PageBuilderService {
             isFriendshipRequested = friendsRequestRepository.existsByInviterAndReceiverAndStatus(user,authUser,ResponseStatusEnum.REJECT);
         }
 
-        model.addAttribute("publicName", user.getPublicName());
-        model.addAttribute("age", user.getAge());
-        model.addAttribute("description", user.getDescription());
+        model.addAttribute("user", user);
         model.addAttribute("friendsList", friendsList);
 
         if(isFriendshipRequested){
@@ -120,9 +108,6 @@ public class PageBuilderService {
                             "<button class=\"goToChat\">Chat</button>");
         }
 
-        model.addAttribute("footer", getFooter());
-
-
         return model;
     }
 
@@ -132,8 +117,6 @@ public class PageBuilderService {
         List<FriendsRequest> friendRequests = friendsRequestRepository.findAllByReceiverAndStatus(authUser, ResponseStatusEnum.WAITING);
 
         model.addAttribute("friendRequests", friendRequests);
-        model.addAttribute("footer", getFooter());
-
 
         return model;
     }
@@ -157,20 +140,4 @@ public class PageBuilderService {
 
         return model;
     }
-
-    private String getFooter(){
-        return "<footer>\n" +
-                "    <ul>\n" +
-                "        <li><a href=\"/main\">Main</a></li>\n" +
-                "        <li><a href=\"/register\">Register</a></li>\n" +
-                "        <li><a href=\"/login\">Login</a></li>\n" +
-                "        <li><a href=\"/profile\">Profile</a></li>\n" +
-                "        <li><a href=\"/mychats\">my chats</a></li>\n" +
-                "        <li><a href=\"/search\">search</a></li>\n" +
-                "        <li><a href=\"/requests_to_friendship\">requests to me</a></li>\n" +
-                "        <li><a href=\"/logout\">Logout</a></li>\n" +
-                "    </ul>\n" +
-                "</footer>";
-    }
-
 }

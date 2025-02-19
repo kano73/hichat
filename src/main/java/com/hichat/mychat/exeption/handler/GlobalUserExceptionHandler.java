@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalUserExceptionHandler {
 
+    @ExceptionHandler(UserNeedsToRegisterWithThisEmail.class)
+    public String UserNeedsToRegisterWithThisEmail (UserNeedsToRegisterWithThisEmail exception, Model model){
+        return "redirect:/logout";
+    }
+
     @ExceptionHandler(UsernameAlreadyExists.class)
     public ResponseEntity<String> usernameAlreadyExistsHandler (UsernameAlreadyExists exception){
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
@@ -56,9 +61,24 @@ public class GlobalUserExceptionHandler {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(UserNeedsToRegisterWithThisEmail.class)
-    public String UserNeedsToRegisterWithThisEmail (UserNeedsToRegisterWithThisEmail exception, Model model){
-        model.addAttribute("email",exception.getMessage());
-        return "/register";
+    @ExceptionHandler(NoRecoveryLinkFound.class)
+    public ResponseEntity<String> noRecoveryLinkFoundHandler (NoRecoveryLinkFound exception){
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(RecoveryCodesNotMatches.class)
+    public ResponseEntity<String> recoveryCodesNotMatchesHandler (RecoveryCodesNotMatches exception){
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(EmailNotVerified.class)
+    public ResponseEntity<String> emailNotVerifiedHandler (EmailNotVerified exception){
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(FileExeption.class)
+    public ResponseEntity<String> fileExeptionHandler (FileExeption exception){
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+    }
+
 }

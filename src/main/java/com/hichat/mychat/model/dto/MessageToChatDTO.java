@@ -1,8 +1,12 @@
 package com.hichat.mychat.model.dto;
 
+import com.hichat.mychat.model.enumclass.DataType;
 import jakarta.validation.constraints.*;
 
 public class MessageToChatDTO {
+
+    @NotNull
+    private DataType contentType;
 
     @NotNull
     @Size(min = 1, max = 1000)
@@ -25,5 +29,21 @@ public class MessageToChatDTO {
 
     public void setIdOfReceiver(Integer idOfReceiver) {
         this.idOfReceiver = idOfReceiver;
+    }
+
+    public DataType getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(DataType contentType) {
+        this.contentType = contentType;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageToChatDTO{" +
+                "message='" + message + '\'' +
+                ", idOfReceiver=" + idOfReceiver +
+                '}';
     }
 }
