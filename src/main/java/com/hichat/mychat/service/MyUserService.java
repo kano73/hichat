@@ -52,7 +52,7 @@ public class MyUserService {
         return false;
     }
 
-    public List<MyUser> findUsersByCriteria(Integer page, SearchCriteria searchCriteria) {
+    public List<MyUser> findUsersByCriteria(SearchCriteria searchCriteria) {
         String publicName = searchCriteria.getPublicName();
         Integer ageAfter = searchCriteria.getAgeAfter();
         Integer ageBefore = searchCriteria.getAgeBefore();

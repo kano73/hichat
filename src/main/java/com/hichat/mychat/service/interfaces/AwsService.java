@@ -1,4 +1,4 @@
-package com.hichat.mychat.interfaces;
+package com.hichat.mychat.service.interfaces;
 
 
 import com.amazonaws.AmazonClientException;

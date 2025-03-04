@@ -52,7 +52,7 @@ public class ChatController {
 
     @PostMapping("/hichat-users-private-photos/send-photo/{toUser}")
     public void uploadFile(@RequestParam("file") MultipartFile file,
-                           @PathVariable("toUser") int toUser) throws Exception, UserNotFoundException {
+                           @PathVariable("toUser") int toUser) throws Exception{
         String fileName = messageService.uploadPhotoToUserAndGetPhotoId(file,toUser);
 
         MessageToChatDTO messageDTO = new MessageToChatDTO();

@@ -3,7 +3,6 @@ package com.hichat.mychat.exeption.handler;
 import com.hichat.mychat.exeption.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalUserExceptionHandler {
 
     @ExceptionHandler(UserNeedsToRegisterWithThisEmail.class)
-    public String UserNeedsToRegisterWithThisEmail (UserNeedsToRegisterWithThisEmail exception, Model model){
+    public String UserNeedsToRegisterWithThisEmail (){
         return "redirect:/logout";
     }
 
@@ -42,7 +41,7 @@ public class GlobalUserExceptionHandler {
     }
 
     @ExceptionHandler(UserOpenedHisPublicProfile.class)
-    public String userOpenedHisPublicProfileHandler (UserOpenedHisPublicProfile exception){
+    public String userOpenedHisPublicProfileHandler (){
         return "redirect:/profile";
     }
 
@@ -77,7 +76,7 @@ public class GlobalUserExceptionHandler {
     }
 
     @ExceptionHandler(FileExeption.class)
-    public ResponseEntity<String> fileExeptionHandler (FileExeption exception){
+    public ResponseEntity<String> fileExceptionHandler (FileExeption exception){
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 

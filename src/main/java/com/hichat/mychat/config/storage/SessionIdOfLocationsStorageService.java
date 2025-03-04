@@ -22,7 +22,7 @@ public class SessionIdOfLocationsStorageService {
         this.locationController = locationController;
     }
 
-    public void saveUserLocationSession(SessionConnectEvent event, MyUser user){
+    public void saveUserLocationSession(SessionConnectEvent event){
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
         String endpoint = accessor.getFirstNativeHeader("endpoint");
 

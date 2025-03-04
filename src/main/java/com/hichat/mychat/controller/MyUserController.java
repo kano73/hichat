@@ -17,8 +17,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-
 @RestController
 public class MyUserController {
     private final MyUserService myUserService;
@@ -47,6 +45,8 @@ public class MyUserController {
 
     @PostMapping("/reset_password/{pathCode}")
     public String resetPassword(@PathVariable @Size(min=12, max=12) @Valid String pathCode, @RequestBody @Valid ResetPasswordDTO resetPasswordDTO, HttpServletRequest request){
+        //todo: need to use pathCode, instead currentPath(passwordRecoveryService logic need to be changed)
+
         String currentPath = request.getRequestURI();
         return passwordRecoveryService.resetPassword(currentPath, resetPasswordDTO) ? "redirect:/logout" : "failed";
     }

@@ -27,7 +27,7 @@ public class WebSocketEventListener {
         MyUser user = authenticatedMyUserService.getCurrUserByPrincipals(event.getUser());
         myUserService.setOnlineStatus(user.getId(), true);
 
-        sessionStorage.saveUserLocationSession(event,user);
+        sessionStorage.saveUserLocationSession(event);
     }
 
     @EventListener

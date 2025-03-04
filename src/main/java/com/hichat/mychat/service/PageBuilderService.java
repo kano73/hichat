@@ -41,27 +41,24 @@ public class PageBuilderService {
         this.chatNativeRepository = chatNativeRepository;
     }
 
-    public Model buildProfilePage(Model model) throws UserNotFoundException {
+    public void buildProfilePage(Model model) throws UserNotFoundException {
         MyUser authUser = authService.getCurrentUserAuthenticated();
 
         List<MyUser> friendsList = getFriendsOfUser(authUser);
 
         model.addAttribute("user", authUser);
         model.addAttribute("friendsList", friendsList);
-        return model;
     }
 
-    public Model buildMyChatsPage(Model model) throws UserNotFoundException {
+    public void buildMyChatsPage(Model model) throws UserNotFoundException {
         MyUser authUser = authService.getCurrentUserAuthenticated();
 
         List<MyUser> friends = getFriendsOfUser(authUser);
 
         model.addAttribute("friendsList", friends);
-
-        return model;
     }
 
-    public Model buildChatWithPage(Model model, int id) throws UserNotFoundException {
+    public void buildChatWithPage(Model model, int id) throws UserNotFoundException {
         MyUser authUser = authService.getCurrentUserAuthenticated();
         int idOfReader = authUser.getId();
 
@@ -78,10 +75,9 @@ public class PageBuilderService {
         model.addAttribute("id",authUser.getId());
 
         tableChatNameStorage.clear();
-        return model;
     }
 
-    public Model buildPublicProfile(int id, Model model) throws UserNotFoundException, UserOpenedHisPublicProfile {
+    public void buildPublicProfile(int id, Model model) throws UserNotFoundException, UserOpenedHisPublicProfile {
         MyUser authUser = authService.getCurrentUserAuthenticated();
         MyUser user = myUserRepository.findById(id).orElseThrow(()->new UserNotFoundException("user with such id dont exists"));
 
@@ -107,18 +103,14 @@ public class PageBuilderService {
                     "<button class=\"removeFromFriends\">Remove From Friends</button>" +
                             "<button class=\"goToChat\">Chat</button>");
         }
-
-        return model;
     }
 
-    public Model buildRequestsForFriendShip(Model model) throws UserNotFoundException {
+    public void buildRequestsForFriendShip(Model model) throws UserNotFoundException {
         MyUser authUser = authService.getCurrentUserAuthenticated();
 
         List<FriendsRequest> friendRequests = friendsRequestRepository.findAllByReceiverAndStatus(authUser, ResponseStatusEnum.WAITING);
 
         model.addAttribute("friendRequests", friendRequests);
-
-        return model;
     }
 
     private List<MyUser> getFriendsOfUser(MyUser authUser){
@@ -133,11 +125,9 @@ public class PageBuilderService {
     }
 
 
-    public Model buildUpdateProfilePage(Model model) throws UserNotFoundException {
+    public void buildUpdateProfilePage(Model model) throws UserNotFoundException {
         MyUser authUser = authService.getCurrentUserAuthenticated();
 
         model.addAttribute("user", authUser);
-
-        return model;
     }
 }

@@ -20,7 +20,7 @@ public class FriendsController {
     }
 
     @PostMapping("/requests_to_friendship")
-    public String addFriend(@RequestBody ResToReqForFriendship response) throws UserNotFoundException, InviteAlreadyExists {
+    public String addFriend(@RequestBody ResToReqForFriendship response) throws UserNotFoundException {
         return friendsService.respondToRequest(response);
     }
 

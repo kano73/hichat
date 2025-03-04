@@ -7,7 +7,7 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.hichat.mychat.interfaces.AwsService;
+import com.hichat.mychat.service.interfaces.AwsService;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -72,8 +72,8 @@ public class AwsServiceImplementation implements AwsService {
             }
 
             objectSummaries.stream()
-                    .filter(item -> !item.getKey().endsWith("/"))
                     .map(S3ObjectSummary::getKey)
+                    .filter(key -> !key.endsWith("/"))
                     .forEach(keys::add);
 
             objectListing = s3Client.listNextBatchOfObjects(objectListing);

@@ -34,7 +34,7 @@ public class LocationController {
 
     @MessageMapping("/locations")
     @SendTo("/sp_send/locations")
-    public LocationResponse forwardMessage(LocationDTO locationDTO, @NotNull Principal principal) throws Exception {
+    public LocationResponse forwardMessage(LocationDTO locationDTO, @NotNull Principal principal) {
         MyUser authUser = authService.getCurrUserByPrincipals(principal);
         LocationResponse locationResponse = LocationResponse.fromLocationDTO(authUser, locationDTO);
 
@@ -44,7 +44,7 @@ public class LocationController {
     }
 
     @PostMapping("/near_by")
-    public List<LocationResponse> postLocation(@Valid @RequestBody LocationDTO locationDTO) throws Exception {
+    public List<LocationResponse> postLocation(@Valid @RequestBody LocationDTO locationDTO) {
         MyUser authUser = authService.getCurrentUserAuthenticated();
         LocationResponse locationResponse = LocationResponse.fromLocationDTO(authUser, locationDTO);
 

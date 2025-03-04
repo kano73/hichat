@@ -37,7 +37,6 @@ public class PasswordRecoveryService {
         this.stringGenerator = stringGenerator;
     }
 
-    //    password manipulations
     @Transactional
     public boolean preparationForPasswordRecovery(MyUser user) {
         String shortLink = "/reset_password/"+  stringGenerator.generateSecretCode12Chars();
