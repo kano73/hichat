@@ -22,6 +22,8 @@ import java.util.List;
 @RestController
 public class LocationController {
 
+//    todo: in general: is this approach ok? (saving locations in ram)
+
     private final AuthenticatedMyUserService authService;
     private final SimpMessagingTemplate messagingTemplate;
     private final UsersAndLocationsStorage usersAndLocationsStorage;

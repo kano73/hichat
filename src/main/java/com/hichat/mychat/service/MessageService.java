@@ -72,6 +72,7 @@ public class MessageService {
         chatNativeRepository.existsOrThrow(authUser.getId(), receiver.getId());
 
         String bucketName = "hichat-users-private-photos";
+//        todo: is it ok to set up accessibility like that
         String fileName = UUID.randomUUID()+"$"+tableChatNameStorage.getTableName();
 
         String contentType = file.getContentType();

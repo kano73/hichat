@@ -22,6 +22,8 @@ public class WebSocketEventListener {
         this.myUserService = myUserService;
     }
 
+//    todo: online status impl, always we need to communicate with db
+
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
         MyUser user = authenticatedMyUserService.getCurrUserByPrincipals(event.getUser());

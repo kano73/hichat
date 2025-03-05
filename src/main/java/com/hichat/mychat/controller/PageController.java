@@ -78,10 +78,6 @@ public class PageController {
 
     @PostMapping("/search")
     public @ResponseBody List<MyUser> search(@RequestParam @Nullable Integer page, @RequestBody SearchCriteria searchCriteria){
-        if(page==null){
-            page=0;
-        }
-
         return myUserService.findUsersByCriteria(searchCriteria);
     }
 

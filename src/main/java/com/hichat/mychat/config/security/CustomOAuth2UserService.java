@@ -16,6 +16,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         this.userValidationService = userValidationService;
     }
 
+//   todo: so in this approach (oauth2) we do not have UserDetails wrapper, and is it ok to validate user like that?
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
